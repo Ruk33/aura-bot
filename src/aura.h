@@ -86,6 +86,9 @@ public:
   bool                     m_AutoLock;                   // config value: auto lock games when the owner is present
   bool                     m_Ready;                      // indicates if there's lacking configuration info so we can quit
   bool                     m_LCPings;                    // config value: use LC style pings (divide actual pings by two)
+  std::string              m_BotUserName;                // config value: ??
+  std::string              m_BotGameName;                // config value: name of the game to create
+  std::string              m_BotOwner;                   // config value: user who can control de bot
 
   explicit CAura(CConfig* CFG);
   ~CAura();

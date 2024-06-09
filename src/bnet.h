@@ -67,6 +67,7 @@ private:
   std::string                      m_CurrentChannel;            // the current chat channel
   std::string                      m_IRC;                       // IRC channel we're sending the message to
   std::string                      m_PasswordHashType;          // password hash type for PvPGN users
+  std::string                      m_BotOwner;
   int64_t                          m_LastDisconnectedTime;      // GetTime when we were last disconnected from battle.net
   int64_t                          m_LastConnectionAttemptTime; // GetTime when we last attempted to connect to battle.net
   int64_t                          m_LastNullTime;              // GetTime when the last null packet was sent for detecting disconnects
@@ -87,7 +88,7 @@ private:
   bool                             m_PvPGN;                     // if this BNET connection is actually a PvPGN
 
 public:
-  CBNET(CAura* nAura, std::string nServer, const std::string& nServerAlias, const std::string& nCDKeyROC, const std::string& nCDKeyTFT, std::string nCountryAbbrev, std::string nCountry, uint32_t nLocaleID, const std::string& nUserName, const std::string& nUserPassword, std::string nFirstChannel, char nCommandTrigger, uint8_t nWar3Version, std::vector<uint8_t> nEXEVersion, std::vector<uint8_t> nEXEVersionHash, std::string nPasswordHashType, uint32_t nHostCounterID);
+  CBNET(CAura* nAura, std::string nServer, const std::string& nServerAlias, const std::string& nCDKeyROC, const std::string& nCDKeyTFT, std::string nCountryAbbrev, std::string nCountry, uint32_t nLocaleID, const std::string& nUserName, const std::string& nUserPassword, std::string nFirstChannel, char nCommandTrigger, uint8_t nWar3Version, std::vector<uint8_t> nEXEVersion, std::vector<uint8_t> nEXEVersionHash, std::string nPasswordHashType, std::string nBotOwner, uint32_t nHostCounterID);
   ~CBNET();
   CBNET(CBNET&) = delete;
 

@@ -42,7 +42,7 @@ using namespace std;
 // CBNET
 //
 
-CBNET::CBNET(CAura* nAura, string nServer, const string& nServerAlias, const string& nCDKeyROC, const string& nCDKeyTFT, string nCountryAbbrev, string nCountry, uint32_t nLocaleID, const string& nUserName, const string& nUserPassword, string nFirstChannel, char nCommandTrigger, uint8_t nWar3Version, std::vector<uint8_t> nEXEVersion, std::vector<uint8_t> nEXEVersionHash, string nPasswordHashType, uint32_t nHostCounterID)
+CBNET::CBNET(CAura* nAura, string nServer, const string& nServerAlias, const string& nCDKeyROC, const string& nCDKeyTFT, string nCountryAbbrev, string nCountry, uint32_t nLocaleID, const string& nUserName, const string& nUserPassword, string nFirstChannel, char nCommandTrigger, uint8_t nWar3Version, std::vector<uint8_t> nEXEVersion, std::vector<uint8_t> nEXEVersionHash, string nPasswordHashType, std::string nBotOwner, uint32_t nHostCounterID)
   : m_Aura(nAura),
     m_Socket(new CTCPClient()),
     m_Protocol(new CBNETProtocol()),
@@ -73,7 +73,8 @@ CBNET::CBNET(CAura* nAura, string nServer, const string& nServerAlias, const str
     m_FirstConnect(true),
     m_WaitingToConnect(true),
     m_LoggedIn(false),
-    m_InChat(false)
+    m_InChat(false),
+    m_BotOwner(nBotOwner)
 {
   if (m_PasswordHashType == "pvpgn" || m_EXEVersion.size() == 4 || m_EXEVersionHash.size() == 4)
   {

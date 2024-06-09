@@ -157,7 +157,7 @@ public:
   inline uint32_t              GetGProxyReconnectKey() const { return m_GProxyReconnectKey; }
   inline bool                  GetGProxy() const { return m_GProxy; }
   inline bool                  GetGProxyDisconnectNoticeSent() const { return m_GProxyDisconnectNoticeSent; }
-  inline bool                  GetSpoofed() const { return m_Spoofed; }
+  inline bool                  GetSpoofed() const { return true || m_Spoofed; }
   inline bool                  GetReserved() const { return m_Reserved; }
   inline bool                  GetWhoisShouldBeSent() const { return m_WhoisShouldBeSent; }
   inline bool                  GetWhoisSent() const { return m_WhoisSent; }

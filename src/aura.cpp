@@ -85,7 +85,7 @@ int main(const int, const char* argv[])
   // read config file
 
   CConfig CFG;
-  CFG.Read("aura.cfg");
+  CFG.Read(argv[1]);
 
   Print("[AURA] starting up");
 
@@ -322,7 +322,8 @@ CAura::CAura(CConfig* CFG)
     if (Locale == "system")
       Print("[AURA] using system locale of " + to_string(LocaleID));
 
-    m_BNETs.push_back(new CBNET(this, Server, ServerAlias, CDKeyROC, CDKeyTFT, CountryAbbrev, Country, LocaleID, UserName, UserPassword, FirstChannel, BNETCommandTrigger[0], War3Version, EXEVersion, EXEVersionHash, PasswordHashType, i));
+    string BotOwner = CFG->GetString("bot_owner", string());
+    m_BNETs.push_back(new CBNET(this, Server, ServerAlias, CDKeyROC, CDKeyTFT, CountryAbbrev, Country, LocaleID, UserName, UserPassword, FirstChannel, BNETCommandTrigger[0], War3Version, EXEVersion, EXEVersionHash, PasswordHashType, BotOwner, i));
   }
 
   if (m_BNETs.empty())
@@ -349,6 +350,25 @@ CAura::CAura(CConfig* CFG)
   CConfig MapCFG;
   MapCFG.Read(m_MapCFGPath + m_DefaultMap);
   m_Map = new CMap(this, &MapCFG, m_MapCFGPath + m_DefaultMap);
+
+  // Load map.
+  {
+    CConfig MapCFG;
+    string File = CFG->GetString("bot_map", string());
+    MapCFG.Set("map_path", R"(Maps\Download\)" + File);
+    MapCFG.Set("map_localpath", File);
+    m_Map->Load(&MapCFG, File);
+    if (m_Map->CheckValid()) {
+      m_Exiting = true;
+    }
+  }
+
+  // Set owner name and initial game name.
+  {
+    m_BotUserName = CFG->GetString("bnet_username", string());
+    m_BotGameName = CFG->GetString("bot_game", string());
+    m_BotOwner = CFG->GetString("bot_owner", string());
+  }
 
   // load the iptocountry data
 
@@ -482,6 +502,8 @@ bool CAura::Update()
       EventGameDeleted(*i);
       delete *i;
       i = m_Games.erase(i);
+
+      Exit = true;
     }
     else
     {
@@ -500,6 +522,8 @@ bool CAura::Update()
       delete m_CurrentGame;
       m_CurrentGame = nullptr;
 
+      Exit = true;
+
       for (auto& bnet : m_BNETs)
       {
         bnet->QueueGameUncreate();
@@ -514,8 +538,16 @@ bool CAura::Update()
 
   for (auto& bnet : m_BNETs)
   {
-    if (bnet->Update(&fd, &send_fd))
+    if (bnet->Update(&fd, &send_fd)) {
       Exit = true;
+    } else {
+      if (bnet->GetInChat() && !m_CurrentGame) {
+        string User = m_BotUserName;
+        string GameName = m_BotGameName;
+        Print("[AURA] Creating game [" + GameName + "] for [" + User + "]");
+        CreateGame(m_Map, GAME_PUBLIC, GameName, m_BotOwner, User, bnet, true);
+      }
+    }
   }
 
   // update irc
